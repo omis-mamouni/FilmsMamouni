@@ -1,0 +1,285 @@
+/* DetailsFilm.css */
+.details-film-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.details-header {
+  margin-bottom: 2rem;
+}
+
+.back-button {
+  background-color: #6b7280;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.back-button:hover {
+  background-color: #4b5563;
+  border-color: transparent;
+}
+
+.loading-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.loading-spinner {
+  width: 3rem;
+  height: 3rem;
+  border: 4px solid #e5e7eb;
+  border-left: 4px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4rem 2rem;
+}
+
+.error-message {
+  text-align: center;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 2rem;
+  border-radius: 0.75rem;
+  max-width: 400px;
+}
+
+.error-icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.movie-details-card {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 3rem;
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.movie-poster-section {
+  position: relative;
+}
+
+.movie-poster {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 1rem 0 0 1rem;
+}
+
+.custom-movie-indicator {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+}
+
+.custom-badge-large {
+  background-color: #dbeafe;
+  color: #1e40af;
+  font-size: 0.875rem;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-weight: 500;
+}
+
+.movie-info-section {
+  padding: 2rem;
+}
+
+.movie-header {
+  margin-bottom: 2rem;
+}
+
+.movie-title {
+  font-size: 2.25rem;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.movie-tagline {
+  font-size: 1.125rem;
+  color: #6b7280;
+  font-style: italic;
+  margin: 0;
+}
+
+.movie-stats {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.stat-label {
+  font-weight: 600;
+  color: #374151;
+  min-width: 120px;
+}
+
+.stat-value {
+  color: #6b7280;
+}
+
+.rating-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.rating-star {
+  color: #fbbf24;
+}
+
+.rating-value {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.rating-count {
+  color: #9ca3af;
+  font-size: 0.875rem;
+}
+
+.genres-section,
+.synopsis-section,
+.production-section,
+.countries-section {
+  margin-bottom: 1.5rem;
+}
+
+.section-label {
+  font-weight: 600;
+  color: #374151;
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.genres-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.genre-tag {
+  background-color: #f3f4f6;
+  color: #374151;
+  padding: 0.375rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.synopsis-text {
+  color: #6b7280;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.production-companies,
+.countries-list {
+  color: #6b7280;
+}
+
+.production-company,
+.country {
+  font-weight: 500;
+}
+
+.warning-message {
+  background-color: #fffbeb;
+  border: 1px solid #fde68a;
+  color: #d97706;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.warning-icon {
+  font-size: 1.25rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .details-film-container {
+    padding: 1rem;
+  }
+  
+  .movie-details-card {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  
+  .movie-poster {
+    border-radius: 1rem 1rem 0 0;
+    max-height: 400px;
+    object-fit: cover;
+  }
+  
+  .movie-info-section {
+    padding: 1.5rem;
+  }
+  
+  .movie-title {
+    font-size: 1.875rem;
+  }
+  
+  .stat-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+  
+  .stat-label {
+    min-width: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .movie-info-section {
+    padding: 1rem;
+  }
+  
+  .movie-title {
+    font-size: 1.5rem;
+  }
+  
+  .movie-tagline {
+    font-size: 1rem;
+  }
+}
