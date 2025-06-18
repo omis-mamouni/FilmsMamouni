@@ -1,8 +1,3 @@
-/* 🎬 CarteFilm.css — Carte d'affichage d'un seul film dans la grille */
-
-
-/* 📦 Grille principale (gérée depuis Accueil.css mais rappel ici au besoin) */
-
 .movies-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
@@ -13,7 +8,7 @@
 }
 
 
-/* 🎞 Carte du film */
+/*  Carte du film */
 
 .movie-card {
     position: relative;
@@ -30,7 +25,7 @@
 }
 
 
-/* 🖼️ Image d'affiche */
+/* Image d'affiche */
 
 .movie-card img {
     width: 100%;
@@ -41,7 +36,7 @@
 }
 
 
-/* ⭐ Badge de note */
+/* Badge de note */
 
 .badge-note {
     position: absolute;
@@ -57,7 +52,7 @@
 }
 
 
-/* 🎬 Titre du film (survol uniquement) */
+/*  Titre du film (survol uniquement) */
 
 .movie-title-hover {
     position: absolute;
@@ -80,7 +75,7 @@
 }
 
 
-/* ✅ Film personnalisé — visible uniquement au survol */
+/*  Film personnalisé — visible uniquement au survol */
 
 .movie-card-badge {
     position: absolute;
@@ -104,7 +99,7 @@
 }
 
 
-/* 🗑️ Bouton supprimer */
+/* Bouton supprimer */
 
 .delete-button {
     background-color: #dc2626;
@@ -120,9 +115,6 @@
 .delete-button:hover {
     background-color: #b91c1c;
 }
-
-
-/* 📱 Responsive */
 
 @media (max-width: 768px) {
     .badge-note {

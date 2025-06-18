@@ -1,8 +1,5 @@
 /* --- Fichier : Navigation.css --- */
 
-
-/* 🍿 Barre de navigation principale sombre, sticky en haut */
-
 .navbar {
     background: linear-gradient(to right, #0f0f0f, #1a1a1a);
     /* dégradé sombre */
@@ -13,9 +10,6 @@
     top: 0;
     z-index: 1000;
 }
-
-
-/* Conteneur centré avec gestion responsive */
 
 .navbar-container {
     display: flex;
@@ -113,7 +107,6 @@
 
 .nav-link.highlight {
     background-color: #10b981;
-    /* vert esthétique */
     color: white;
     font-weight: bold;
 }
@@ -121,9 +114,6 @@
 .nav-link.highlight:hover {
     background-color: #059669;
 }
-
-
-/* Responsive mobile */
 
 @media (max-width: 768px) {
     .navbar-container {

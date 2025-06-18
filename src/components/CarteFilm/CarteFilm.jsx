@@ -1,4 +1,4 @@
-// 📁 CarteFilm.jsx — Composant pour afficher une carte de film
+//  CarteFilm.jsx
 
 import './CarteFilm.css';
 import { IMAGE_BASE_URL } from '../../config/api-config';

@@ -1,7 +1,7 @@
-/* 🔍 Recherche.css — Page de recherche de films */
+/* Recherche.css */
 
 
-/* 📦 Conteneur principal */
+/* Conteneur principal */
 
 .recherche-container {
     max-width: 1600px;
@@ -11,7 +11,9 @@
     justify-content: center;
     align-items: center;
 }
-/* 💡 Bande stylisée pour les sections */
+
+
+/* Bande stylisée pour les sections */
 
 .section-header {
     background: linear-gradient(to right, #111, #1a1a1a);
@@ -24,7 +26,7 @@
 }
 
 
-/* 🧭 En-tête de la page de recherche */
+/* En-tête de la page de recherche */
 
 .recherche-header {
     text-align: center;
@@ -44,14 +46,14 @@
 }
 
 
-/* 🧾 Résultats de la recherche */
+/* Résultats de la recherche */
 
 .results-section {
     margin-top: 2rem;
 }
 
 
-/* 🎞️ Grille responsive pour afficher les films */
+/* Grille responsive pour afficher les films */
 
 .movies-grid {
     display: grid;
@@ -63,7 +65,7 @@
 }
 
 
-/* 📈 Statistiques de résultats */
+/* Statistiques de résultats */
 
 .results-header {
     margin-bottom: 1rem;
@@ -80,9 +82,6 @@
     color: #bbbbbb;
 }
 
-
-/* ❌ Aucune correspondance trouvée */
-
 .no-results {
     text-align: center;
     margin-top: 2rem;
@@ -92,9 +91,6 @@
 .no-results-icon {
     font-size: 3rem;
 }
-
-
-/* ⏳ Chargement en cours */
 
 .loading-container {
     text-align: center;
@@ -106,7 +102,6 @@
     height: 2.5rem;
     border: 4px solid #555;
     border-top: 4px solid #e50914;
-    /* Couleur rouge Netflix */
     border-radius: 50%;
     animation: spin 1s linear infinite;
     margin: 0 auto 1rem;
@@ -123,18 +118,12 @@
     font-size: 1rem;
 }
 
-
-/* 🚨 Message d'erreur */
-
 .search-error {
     color: #ff4d4f;
     margin-top: 1rem;
     text-align: center;
     font-size: 0.95rem;
 }
-
-
-/* 📱 Responsive mobile */
 
 @media (max-width: 768px) {
     .recherche-title {

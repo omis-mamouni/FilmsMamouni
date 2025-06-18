@@ -1,4 +1,4 @@
-// DetailsFilm.jsx (nouvelle version redesignée)
+// DetailsFilm.jsx 
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './DetailsFilm.css';

@@ -13,7 +13,7 @@ const AjouterFilm = ({ addedMovies, setAddedMovies }) => {
   const [message, setMessage] = useState('');
   const queryClient = useQueryClient();
 
-  // 🎯 Hook de formulaire React Hook Form
+  //  Hook de formulaire React Hook Form
   const {
     register,
     handleSubmit,
@@ -31,7 +31,7 @@ const AjouterFilm = ({ addedMovies, setAddedMovies }) => {
     }
   });
 
-  // 📌 Mutation pour l’ajout de film
+  // Mutation pour l’ajout de film
   const mutation = useMutation({
     mutationFn: (newMovie) => {
       addCustomMovie(newMovie);
@@ -45,7 +45,7 @@ const AjouterFilm = ({ addedMovies, setAddedMovies }) => {
     }
   });
 
-  // 📷 Gestion du fichier image uploadé
+  //  Gestion du fichier image uploadé
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -59,13 +59,13 @@ const AjouterFilm = ({ addedMovies, setAddedMovies }) => {
     }
   };
 
-  // ✅ Soumission du formulaire
+  //  Soumission du formulaire
   const onSubmit = (data) => {
     const titre = data.title.trim();
     const description = data.overview.trim();
 
     if (existsCustomMovieTitle(titre)) {
-      setMessage('⚠️ Un film avec ce titre existe déjà');
+      setMessage('Un film avec ce titre existe déjà');
       return;
     }
 
@@ -105,7 +105,7 @@ const AjouterFilm = ({ addedMovies, setAddedMovies }) => {
         <div className="form-card">
           <div className="form-fields">
 
-            {/* 🎬 Titre */}
+            {/*  Titre */}
             <div className="field-group">
               <label className="field-label">Titre du film *</label>
               <input
@@ -119,7 +119,7 @@ const AjouterFilm = ({ addedMovies, setAddedMovies }) => {
               {errors.title && <span className="field-error">{errors.title.message}</span>}
             </div>
 
-            {/* 📝 Description */}
+            {/* Description */}
             <div className="field-group">
               <label className="field-label">Description *</label>
               <textarea
@@ -133,7 +133,7 @@ const AjouterFilm = ({ addedMovies, setAddedMovies }) => {
               {errors.overview && <span className="field-error">{errors.overview.message}</span>}
             </div>
 
-            {/* 📅 Date de sortie */}
+            {/*  Date de sortie */}
             <div className="field-group">
               <label className="field-label">Date de sortie</label>
               <input
@@ -144,7 +144,7 @@ const AjouterFilm = ({ addedMovies, setAddedMovies }) => {
               />
             </div>
 
-            {/* 🔗 Lien de l’affiche */}
+            {/*  Lien de l’affiche */}
             <div className="field-group">
               <label className="field-label">Lien de l'affiche (optionnel)</label>
               <input
@@ -160,7 +160,7 @@ const AjouterFilm = ({ addedMovies, setAddedMovies }) => {
               <div className="character-count">{watch('poster_path')?.length || 0}/100</div>
             </div>
 
-            {/* 📁 Upload image */}
+            {/*  Upload image */}
             <div className="field-group">
               <label className="field-label">Ou importer une image depuis votre appareil</label>
               <input
@@ -171,7 +171,7 @@ const AjouterFilm = ({ addedMovies, setAddedMovies }) => {
               />
             </div>
 
-            {/* 🖼️ Aperçu */}
+            {/* Aperçu */}
             {previewSrc && (
               <div className="image-preview-box">
                 <img src={previewSrc} alt="Aperçu" className="image-preview-styled" />

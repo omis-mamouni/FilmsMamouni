@@ -1,16 +1,8 @@
-/* --- Fichier : Accueil.css --- */
-
-
-/* 🍿 Page d'accueil des films (populaires + top notés) */
-
 .accueil-container {
     max-width: 95%;
     margin: 0 auto;
     padding: 2rem 1rem;
 }
-
-
-/* 💡 Bande stylisée pour les sections */
 
 .section-header {
     background: linear-gradient(to right, #111, #1a1a1a);
@@ -36,9 +28,6 @@
     color: #bbbbbb;
 }
 
-
-/* 🎬 Grille de films */
-
 .movies-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
@@ -47,9 +36,6 @@
     margin: 0 auto;
     padding: 0 1rem;
 }
-
-
-/* 🔽 Bouton charger plus */
 
 .load-more-container {
     margin-top: 2rem;
@@ -71,9 +57,6 @@
 .load-more-button:hover {
     background-color: #b20710;
 }
-
-
-/* 📱 Responsive mobile */
 
 @media (max-width: 768px) {
     .accueil-title {

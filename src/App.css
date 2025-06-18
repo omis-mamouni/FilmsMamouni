@@ -1,17 +1,9 @@
-/* --- Fichier : App.css --- */
-
-
-/* Style du corps global */
-
 body {
     background-color: #141414;
     margin: 0;
     font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
     color: #e5e5e5;
 }
-
-
-/* Conteneur principal de l'application */
 
 .app-container {
     min-height: 100vh;
@@ -20,18 +12,12 @@ body {
     background-color: #141414;
 }
 
-
-/* En-tête (barre de navigation) */
-
 .app-header {
     background: linear-gradient(to right, #0f0f0f, #1a1a1a);
     padding: 1rem 2rem;
     color: white;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
-
-
-/* Pied de page */
 
 .app-footer {
     background-color: #0f0f0f;
@@ -41,9 +27,6 @@ body {
     color: #888;
     margin-top: auto;
 }
-
-
-/* Bouton générique stylisé */
 
 .btn-principale {
     background-color: #e50914;

@@ -1,5 +1,3 @@
-// services/customMoviesService.js
-
 const STORAGE_KEY = 'customMovies';
 
 export const getCustomMovies = () => {
