@@ -1,230 +1,94 @@
-// DetailsFilm.jsx
-import React, { useState, useEffect } from 'react';
+// DetailsFilm.jsx (nouvelle version redesignée)
+import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './DetailsFilm.css';
 import { API_KEY } from '../../config/api-config';
+import { useQuery } from '@tanstack/react-query';
 
-
-// Configuration API
-const MOVIE_DETAILS_URL = (movieId) => `https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}`;
+const MOVIE_DETAILS_URL = (id) => `https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}`;
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
+
+const fetchMovieDetails = async (id) => {
+  const stored = sessionStorage.getItem('selectedMovie');
+  if (stored) {
+    const movie = JSON.parse(stored);
+    if (movie.isCustom) return movie;
+    const res = await fetch(MOVIE_DETAILS_URL(id));
+    if (!res.ok) throw new Error('Film non trouvé');
+    return res.json();
+  }
+  const res = await fetch(MOVIE_DETAILS_URL(id));
+  if (!res.ok) throw new Error('Film non trouvé');
+  return res.json();
+};
 
 const DetailsFilm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [movieDetails, setMovieDetails] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
 
-  useEffect(() => {
-    const fetchMovieDetails = async () => {
-      try {
-        setLoading(true);
-        setError('');
-        
-        // D'abord, essayer de récupérer les données du sessionStorage
-        const storedMovie = sessionStorage.getItem('selectedMovie');
-        if (storedMovie) {
-          const movie = JSON.parse(storedMovie);
-          setMovieDetails(movie);
-          
-          // Si ce n'est pas un film personnalisé, récupérer les détails complets
-          if (!movie.isCustom && id) {
-            const response = await fetch(MOVIE_DETAILS_URL(id));
-            if (response.ok) {
-              const data = await response.json();
-              setMovieDetails(data);
-            }
-          }
-        } else if (id) {
-          // Si pas de données stockées, récupérer directement les détails
-          const response = await fetch(MOVIE_DETAILS_URL(id));
-          if (!response.ok) throw new Error('Film non trouvé');
-          const data = await response.json();
-          setMovieDetails(data);
-        } else {
-          throw new Error('Aucune information de film disponible');
-        }
-      } catch (err) {
-        setError('Impossible de charger les détails du film');
-        console.error('Erreur détails film:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const { data: movie, isLoading, isError, error } = useQuery({
+    queryKey: ['movie', id],
+    queryFn: () => fetchMovieDetails(id),
+    enabled: !!id,
+  });
 
-    fetchMovieDetails();
-  }, [id]);
-
-  const handleBack = () => {
-    navigate(-1); // Retour à la page précédente
+  const getPoster = () => {
+    if (movie?.isCustom && movie.poster_path) return movie.poster_path;
+    if (movie?.poster_path) return `${IMAGE_BASE_URL}${movie.poster_path}`;
+    return `data:image/svg+xml,${encodeURIComponent(
+      '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="600" viewBox="0 0 400 600"><rect width="400" height="600" fill="#f3f4f6"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" font-family="Arial" font-size="50" fill="#9ca3af">🎬</text></svg>'
+    )}`;
   };
 
-  if (loading) {
-    return (
-      <div className="details-film-container">
-        <div className="loading-overlay">
-          <div className="loading-spinner"></div>
-          <p>Chargement des détails...</p>
-        </div>
-      </div>
-    );
-  }
+  const format = (value, unit) => value ? `${value}${unit}` : 'Non spécifiée';
 
-  if (error || !movieDetails) {
-    return (
-      <div className="details-film-container">
-        <div className="error-container">
-          <div className="error-message">
-            <span className="error-icon">❌</span>
-            <p>{error || 'Film non trouvé'}</p>
-            <button onClick={handleBack} className="back-button">
-              Retour
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  const defaultImage = `data:image/svg+xml,${encodeURIComponent(
-    '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="600" viewBox="0 0 400 600"><rect width="400" height="600" fill="#e5e7eb"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" font-family="Arial" font-size="60" fill="#9ca3af">🎬</text></svg>'
-  )}`;
-
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('fr-FR', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0
-    }).format(amount);
-  };
-
-  const formatRuntime = (minutes) => {
-    if (!minutes) return 'Non spécifiée';
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    return hours > 0 ? `${hours}h ${mins}min` : `${mins}min`;
-  };
+  if (isLoading) return <div className="film-loader">Chargement...</div>;
+  if (isError || !movie) return <div className="film-error">Erreur : {error?.message || 'Introuvable'}</div>;
 
   return (
-    <div className="details-film-container">
-      <div className="details-header">
-        <button onClick={handleBack} className="back-button">
-          ← Retour
-        </button>
-      </div>
+    <div className="film-details-wrapper">
+      <button onClick={() => navigate(-1)} className="btn-back">← Retour</button>
 
-      <div className="movie-details-card">
-        <div className="movie-poster-section">
-          <img 
-            src={movieDetails.poster_path ? `${IMAGE_BASE_URL}${movieDetails.poster_path}` : defaultImage}
-            alt={movieDetails.title}
-            className="movie-poster"
-          />
-          {movieDetails.isCustom && (
-            <div className="custom-movie-indicator">
-              <span className="custom-badge-large">Film personnalisé</span>
-            </div>
-          )}
+      <div className="film-card">
+        <div className="film-poster">
+          <img src={getPoster()} alt={movie.title} />
         </div>
-        
-        <div className="movie-info-section">
-          <div className="movie-header">
-            <h1 className="movie-title">{movieDetails.title}</h1>
-            {movieDetails.tagline && (
-              <p className="movie-tagline">"{movieDetails.tagline}"</p>
-            )}
-          </div>
-          
-          <div className="movie-stats">
-            <div className="stat-item">
-              <span className="stat-label">Date de sortie:</span>
-              <span className="stat-value">{movieDetails.release_date || 'Non spécifiée'}</span>
-            </div>
-            
-            <div className="stat-item">
-              <span className="stat-label">Note:</span>
-              <div className="rating-container">
-                <span className="rating-star">⭐</span>
-                <span className="rating-value">{movieDetails.vote_average?.toFixed(1) || '0.0'}/10</span>
-                <span className="rating-count">({movieDetails.vote_count || 0} votes)</span>
-              </div>
-            </div>
-            
-            {movieDetails.runtime && (
-              <div className="stat-item">
-                <span className="stat-label">Durée:</span>
-                <span className="stat-value">{formatRuntime(movieDetails.runtime)}</span>
-              </div>
-            )}
-            
-            {movieDetails.budget && movieDetails.budget > 0 && (
-              <div className="stat-item">
-                <span className="stat-label">Budget:</span>
-                <span className="stat-value">{formatCurrency(movieDetails.budget)}</span>
-              </div>
-            )}
 
-            {movieDetails.revenue && movieDetails.revenue > 0 && (
-              <div className="stat-item">
-                <span className="stat-label">Recettes:</span>
-                <span className="stat-value">{formatCurrency(movieDetails.revenue)}</span>
-              </div>
-            )}
+        <div className="film-info">
+          <h1 className="film-title">{movie.title}</h1>
+          {movie.tagline && <p className="film-tagline">"{movie.tagline}"</p>}
 
-            {movieDetails.status && (
-              <div className="stat-item">
-                <span className="stat-label">Statut:</span>
-                <span className="stat-value">{movieDetails.status}</span>
-              </div>
-            )}
+          <div className="film-meta">
+            <span><strong>📅 Sortie :</strong> {movie.release_date || 'Non spécifiée'}</span>
+            <span><strong>⭐ Note :</strong> {movie.vote_average?.toFixed(1) || '0.0'} /10 ({movie.vote_count} votes)</span>
+            <span><strong>⏱ Durée :</strong> {format(movie.runtime, ' min')}</span>
+            <span><strong>💰 Budget :</strong> {movie.budget ? movie.budget.toLocaleString('fr-FR', { style: 'currency', currency: 'USD' }) : 'Non spécifié'}</span>
+            <span><strong>💵 Recettes :</strong> {movie.revenue ? movie.revenue.toLocaleString('fr-FR', { style: 'currency', currency: 'USD' }) : 'Non spécifiées'}</span>
           </div>
 
-          {movieDetails.genres && movieDetails.genres.length > 0 && (
-            <div className="genres-section">
-              <span className="section-label">Genres:</span>
-              <div className="genres-container">
-                {movieDetails.genres.map(genre => (
-                  <span key={genre.id} className="genre-tag">
-                    {genre.name}
-                  </span>
-                ))}
-              </div>
+          <div className="film-section">
+            <h3>🎞 Genres</h3>
+            <div className="tags">
+              {movie.genres?.map(g => <span key={g.id} className="tag">{g.name}</span>)}
+            </div>
+          </div>
+
+          <div className="film-section">
+            <h3>📖 Synopsis</h3>
+            <p>{movie.overview || 'Aucun synopsis disponible.'}</p>
+          </div>
+
+          {movie.production_companies?.length > 0 && (
+            <div className="film-section">
+              <h3>🏢 Production</h3>
+              <p>{movie.production_companies.map(p => p.name).join(', ')}</p>
             </div>
           )}
 
-          <div className="synopsis-section">
-            <span className="section-label">Synopsis:</span>
-            <p className="synopsis-text">
-              {movieDetails.overview || 'Aucun synopsis disponible.'}
-            </p>
-          </div>
-
-          {movieDetails.production_companies && movieDetails.production_companies.length > 0 && (
-            <div className="production-section">
-              <span className="section-label">Sociétés de production:</span>
-              <div className="production-companies">
-                {movieDetails.production_companies.map((company, index) => (
-                  <span key={company.id} className="production-company">
-                    {company.name}
-                    {index < movieDetails.production_companies.length - 1 && ', '}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {movieDetails.production_countries && movieDetails.production_countries.length > 0 && (
-            <div className="countries-section">
-              <span className="section-label">Pays de production:</span>
-              <div className="countries-list">
-                {movieDetails.production_countries.map((country, index) => (
-                  <span key={country.iso_3166_1} className="country">
-                    {country.name}
-                    {index < movieDetails.production_countries.length - 1 && ', '}
-                  </span>
-                ))}
-              </div>
+          {movie.production_countries?.length > 0 && (
+            <div className="film-section">
+              <h3>🌍 Pays</h3>
+              <p>{movie.production_countries.map(c => c.name).join(', ')}</p>
             </div>
           )}
         </div>

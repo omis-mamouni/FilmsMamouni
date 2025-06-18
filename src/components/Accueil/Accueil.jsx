@@ -1,95 +1,106 @@
-// src/components/Accueil/Accueil.jsx
-import React, { useState, useEffect } from 'react';
+// Accueil.jsx
+import React from 'react';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import MovieCard from '../MovieCard/MovieCard';
-import { POPULAR_MOVIES_URL } from '../../config/api-config';
-import { BASE_URL } from '../../config/api-config';
+import CarteFilm from '../CarteFilm/CarteFilm';
 import './Accueil.css';
 
+// 📦 Récupération des films populaires via API TMDB
+const fetchMovies = async ({ pageParam = 1 }) => {
+  const url = `https://api.themoviedb.org/3/movie/popular?language=fr-FR&page=${pageParam}&api_key=${import.meta.env.VITE_TMDB_API_KEY}`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('Erreur chargement populaires');
+  const data = await res.json();
+  return { results: data.results, nextPage: pageParam + 1, totalPages: data.total_pages };
+};
+
+// ⭐ Récupération des films les mieux notés
+const fetchTopRated = async () => {
+  const res = await fetch(`https://api.themoviedb.org/3/movie/top_rated?language=fr-FR&page=1&api_key=${import.meta.env.VITE_TMDB_API_KEY}`);
+  if (!res.ok) throw new Error('Erreur Top Rated');
+  const data = await res.json();
+  return data.results;
+};
+
 const Accueil = () => {
-  const [movies, setMovies] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchPopularMovies = async () => {
-      try {
-        setLoading(true);
-        setError('');
-        const response = await fetch( POPULAR_MOVIES_URL);
-        if (!response.ok) throw new Error('Erreur lors du chargement des films');
-        const data = await response.json();
-        setMovies(data.results || []);
-      } catch (err) {
-        setError('Impossible de charger les films populaires. Vérifiez votre connexion internet.');
-        console.error('Erreur de chargement:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // 🔄 Infinite Query : Films populaires
+  const {
+    data,
+    isLoading,
+    isError,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage
+  } = useInfiniteQuery({
+    queryKey: ['movies-home'],
+    queryFn: fetchMovies,
+    getNextPageParam: (lastPage) => {
+      return lastPage.nextPage <= lastPage.totalPages ? lastPage.nextPage : undefined;
+    }
+  });
 
-    fetchPopularMovies();
-  }, []);
+  // ⭐ Top rated films
+  const {
+    data: topRated,
+    isLoading: loadingTop,
+    isError: errorTop
+  } = useQuery({
+    queryKey: ['top-rated'],
+    queryFn: fetchTopRated
+  });
 
+  const movies = data?.pages.flatMap(page => page.results) || [];
+
+  // 🎬 Gestion du clic sur un film
   const handleMovieClick = (movie) => {
-    // Stocker les données du film dans le sessionStorage
     sessionStorage.setItem('selectedMovie', JSON.stringify(movie));
     navigate(`/details/${movie.id}`);
   };
 
-  if (loading) {
-    return (
-      <div className="accueil-container">
-        <div className="loading-container">
-          <div className="loading-spinner"></div>
-          <p className="loading-text">Chargement des films populaires...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="accueil-container">
-        <div className="error-container">
-          <div className="error-message">
-            <span className="error-icon">⚠️</span>
-            <p>{error}</p>
-            <button 
-              onClick={() => window.location.reload()} 
-              className="retry-button"
-            >
-              Réessayer
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="accueil-container">
-      <header className="accueil-header">
-        <h1 className="accueil-title">Films Populaires</h1>
+
+      {/* 🎥 Bande section : Films populaires */}
+      <div className="section-header">
+        <h1 className="accueil-title">Films Populaires ({movies.length})</h1>
         <p className="accueil-subtitle">Découvrez les films les plus populaires du moment</p>
-      </header>
-      
+      </div>
+
+      {isLoading && <p>Chargement des films...</p>}
+      {isError && <p>Erreur : {error.message}</p>}
+
       <div className="movies-grid">
         {movies.map(movie => (
-          <MovieCard 
-            key={movie.id} 
-            movie={movie} 
-            onClick={handleMovieClick}
-          />
+          <CarteFilm key={movie.id} movie={movie} onClick={handleMovieClick} />
         ))}
       </div>
-      
-      {movies.length === 0 && !loading && !error && (
-        <div className="no-movies">
-          <p>Aucun film trouvé.</p>
+
+      {/* 🔘 Bouton de chargement */}
+      {hasNextPage && (
+        <div className="load-more-container">
+          <button onClick={() => fetchNextPage()} disabled={isFetchingNextPage} className="load-more-button">
+            {isFetchingNextPage ? 'Chargement...' : 'Charger plus'}
+          </button>
         </div>
       )}
+
+      {/* ⭐ Section Top Rated */}
+      <div className="section-header" style={{ marginTop: '3rem' }}>
+        <h2 className="accueil-title">Top Rated Films</h2>
+        <p className="accueil-subtitle">Les mieux notés par les spectateurs</p>
+      </div>
+
+      {loadingTop && <p>Chargement des films top rated...</p>}
+      {errorTop && <p>Erreur lors du chargement top rated</p>}
+
+      <div className="movies-grid">
+        {topRated?.map(movie => (
+          <CarteFilm key={movie.id} movie={movie} onClick={handleMovieClick} />
+        ))}
+      </div>
     </div>
   );
 };

@@ -6,6 +6,8 @@ import Accueil from './components/Accueil/Accueil';
 import Recherche from './components/Recherche/Recherche';
 import AjouterFilm from './components/AjouterFilm/AjouterFilm';
 import DetailsFilm from './components/DetailsFilm/DetailsFilm';
+import CarteFilm from './components/CarteFilm/CarteFilm';
+import Footer from './components/Footer/Footer';
 import './App.css';
 
 const App = () => {
@@ -30,8 +32,9 @@ const App = () => {
           <Route path="/details/:id" element={<DetailsFilm />} />
         </Routes>
       </main>
-
+      <Footer />
     </div>
+    
   );
 };
 
